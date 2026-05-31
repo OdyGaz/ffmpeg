@@ -59,6 +59,9 @@ ffmpeg -f gdigrab -framerate 30 -i desktop -f dshow -i audio="YOUR_MICROPHONE_NA
 *   `-c:a aac`: Χρησιμοποιεί τον κωδικοποιητή AAC για την συμπίεση του ήχου.
 
 ---
+```bash
+ffmpeg -f gdigrab -framerate 30 -i desktop -f dshow -i audio="CABLE Output (VB-Audio Virtual Cable)" -f dshow -i audio="Microphone Array (Realtek(R) Audio)" -filter_complex "[1:a][2:a]amix=inputs=2[a]" -map 0:v -map "[a]" -c:v libx264 -pix_fmt yuv420p -c:a aac -b:a 192k output.mp4
+```
 
 ## 🛑 Πώς να σταματήσετε την εγγραφή
 Για να τερματίσετε την εγγραφή και να αποθηκευτεί σωστά το αρχείο σας, μεταβείτε στο τερματικό/παράθυρο εντολών που εκτελείται το FFmpeg και πατήστε το πλήκτρο **`q`** (ή τον συνδυασμό πλήκτρων `Ctrl + C`).
