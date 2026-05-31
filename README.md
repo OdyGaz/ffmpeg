@@ -65,6 +65,63 @@ ffmpeg -f gdigrab -framerate 30 -i desktop -f dshow -i audio="YOUR_MICROPHONE_NA
 
 ---
 
+---
+
+## 🛠️ FAQ & Προχωρημένες Ρυθμίσεις
+
+### 1. Πού αποθηκεύεται το βίντεο και πώς ορίζω εγώ τον φάκελο;
+
+Αν γράψετε απλώς `output.mp4` στο τέλος της εντολής, το βίντεο θα αποθηκευτεί στον φάκελο στον οποίο βρίσκεται το Command Prompt εκείνη τη στιγμή (π.χ. `C:\Users\username`).
+
+Μπορείτε να ορίσετε εσείς οποιονδήποτε φάκελο θέλετε, γράφοντας ολόκληρη τη διαδρομή (path) μέσα σε εισαγωγικά στο τέλος της εντολής.
+
+*   **Αποθήκευση στην Επιφάνεια Εργασίας (Desktop):**
+    `"C:\Users\ogazel02\Desktop\output.mp4"`
+*   **Αποθήκευση στα Έγγραφα (Documents):**
+    `"C:\Users\ogazel02\Documents\output.mp4"`
+
+---
+
+### 2. Σε τι ανάλυση αποθηκεύεται το βίντεο;
+
+Το FFmpeg καταγράφει την οθόνη στην **πραγματική (native) ανάλυση του μόνιτορ σας** (π.χ. `1920x1080`). 
+
+Αν θέλετε να μειώσετε την ανάλυση για να γλιτώσετε χώρο (π.χ. να το κάνετε 720p), προσθέστε την παράμετρο `-vf scale=1280:-2` στην εντολή σας:
+```bash
+ffmpeg -f gdigrab -framerate 30 -i desktop -vf scale=1280:-2 -pix_fmt yuv420p output.mp4
+```
+
+---
+
+### 3. Πώς καταγράφω τον ήχο του συστήματος (π.χ. YouTube) μαζί με την οθόνη;
+
+Για να καταγράψετε ψηφιακά ό,τι ακούγεται από τον υπολογιστή σας, χρησιμοποιούμε το εικονικό καλώδιο **VB-Audio Virtual Cable**.
+
+#### Βήμα Α: Ρύθμιση στα Windows
+1. Επιλέξτε ως συσκευή αναπαραγωγής των Windows (κάτω δεξιά στην μπάρα εργασιών) το **CABLE Input (VB-Audio Virtual Cable)**.
+2. Για να συνεχίσετε να ακούτε τη μουσική από τα ακουστικά σας κατά την εγγραφή:
+   * Πατήστε `Win + R`, γράψτε `mmsys.cpl` και πατήστε Enter.
+   * Στην καρτέλα **Εγγραφή** (Recording), κάντε διπλό κλικ στο **CABLE Output**.
+   * Στην καρτέλα **Ακρόαση** (Listen), τσεκάρετε το *Listen to this device* και από κάτω επιλέξτε την πραγματική σας κάρτα ήχου/ακουστικά (π.χ. `Speakers (Realtek(R) Audio)` ή `Speakers (FxSound Audio Enhancer)`).
+
+#### Βήμα Β: Εκτέλεση Εντολής
+```cmd
+ffmpeg -f gdigrab -framerate 30 -i desktop -f dshow -i audio="CABLE Output (VB-Audio Virtual Cable)" -c:v libx264 -pix_fmt yuv420p -c:a aac -b:a 192k "C:\Users\ogazel02\Desktop\output.mp4"
+```
+
+---
+
+### 5. Πώς καταγράφω ταυτόχρονα ΚΑΙ τον ήχο του PC ΚΑΙ τη φωνή μου από το μικρόφωνο;
+
+Για να καταγράψετε ταυτόχρονα την οθόνη, τον ήχο του υπολογιστή και τη φωνή σας, πρέπει να πούμε στο FFmpeg να λάβει και τις δύο πηγές ήχου και να τις αναμίξει σε μία ροή χρησιμοποιώντας το φίλτρο `amix`.
+
+#### Εντολή με χρήση του ενσωματωμένου μικροφώνου (Microphone Array):
+```cmd
+ffmpeg -f gdigrab -framerate 30 -i desktop -f dshow -i audio="CABLE Output (VB-Audio Virtual Cable)" -f dshow -i audio="Microphone Array (Realtek(R) Audio)" -filter_complex "[1:a][2:a]amix=inputs=2[a]" -map 0:v -map "[a]" -c:v libx264 -pix_fmt yuv420p -c:a aac -b:a 192k "C:\Users\ogazel02\Desktop\output.mp4"
+```
+
+---
+
 # 24-May-2026
 # 🤔 Τι είναι το FFmpeg και πώς μπορώ να το χρησιμοποιήσω για να μετατρέψω ένα βίντεο σε GIF χωρίς να χάσω την ποιότητα της εικόνας;
 
