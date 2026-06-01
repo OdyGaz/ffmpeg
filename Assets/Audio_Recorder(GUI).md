@@ -83,14 +83,15 @@ class FFmpegRecorderGUI:
         self.thread.start()
 
     def run_ffmpeg(self):
+        # Ενημερωμένη εντολή FFmpeg με βάση την επιθυμητή μορφή
         cmd = [
             "ffmpeg",
-            "-y", # Παράκαμψη ερώτησης για αντικατάσταση αρχείου
+            "-y",
             "-f", "gdigrab",
             "-framerate", "30",
             "-i", "desktop",
             "-f", "dshow", 
-            "-i", "Microphone Array (Realtek(R) Audio)", # Αντικατάστησε το YOUR_MICROPHONE_NAME με το όνομα της συσκευής σου
+            "-i", "audio=Microphone Array (Realtek(R) Audio)",  # <- Προσοχή στη σύνταξη εδώ
             "-c:v", "libx264",
             "-pix_fmt", "yuv420p",
             "-c:a", "aac",
