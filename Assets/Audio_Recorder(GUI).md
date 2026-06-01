@@ -85,15 +85,12 @@ class FFmpegRecorderGUI:
     def run_ffmpeg(self):
         cmd = [
             "ffmpeg",
-            "-y",
+            "-y", # Παράκαμψη ερώτησης για αντικατάσταση αρχείου
             "-f", "gdigrab",
             "-framerate", "30",
             "-i", "desktop",
-            "-f", "dshow", "-i", "audio=CABLE Output (VB-Audio Virtual Cable)",
-            "-f", "dshow", "-i", "audio=External Mic (Realtek(R) Audio)",
-            "-filter_complex", "[1:a][2:a]amix=inputs=2[a]",
-            "-map", "0:v",
-            "-map", "[a]",
+            "-f", "dshow", 
+            "-i", "Microphone Array (Realtek(R) Audio)", # Αντικατάστησε το YOUR_MICROPHONE_NAME με το όνομα της συσκευής σου
             "-c:v", "libx264",
             "-pix_fmt", "yuv420p",
             "-c:a", "aac",
